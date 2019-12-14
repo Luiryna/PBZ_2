@@ -1,9 +1,7 @@
 package Controller;
 
 import Main.*;
-import Model.EmployeeData;
-import Model.EquipmentData;
-import Model.ProdAreaData;
+import Model.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,24 +17,54 @@ public class Controller {
     private List<ProdAreaData> list = new ArrayList<>();
     private List<EquipmentData> equipmentList = new ArrayList<>();
     private List<EmployeeData> employeeList = new ArrayList<>();
+    private List<BreakageData> breakages = new ArrayList<>();
+    private List<InspectionData> inspections = new ArrayList<>();
+    private List<BreakageData> search1 = new ArrayList<>();
+    private List<InspectionData> search2 = new ArrayList<>();
+    private List<InspectionData> search3 = new ArrayList<>();
 
-    public List<ProdAreaData> getBreakages() throws SQLException {
-        list.clear();
-        PreparedStatement preparedStatementInner = conn.prepareStatement("SELECT * FROM breakage");
-             ResultSet rs = preparedStatementInner.executeQuery();
-            while (rs.next()) {
-                list.add(new ProdAreaData(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
-                        rs.getInt(5), rs.getString(6)));
-            }
 
-        for (ProdAreaData data: list) {
-            System.out.println(data.getDate() + " " + data.getReason() + " " + data.getFio() + " " + data.getNameArea()
-            + " " + data.getIdEquipment() + " " + data.getNameEquipment());
+    public List<InspectionData> getInspections() throws SQLException {
+        inspections.clear();
+        PreparedStatement preparedStatementInner = conn.prepareStatement("SELECT * FROM inspection");
+        ResultSet rs = preparedStatementInner.executeQuery();
+        while (rs.next()) {
+            inspections.add(new InspectionData(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5)));
         }
-        return list;
+
+        for (InspectionData data: inspections) {
+            System.out.println(data.getDateInspection() + " " + data.getReason() + " " + data.getResult() + " " +
+                    data.getIdEmployee() + " " + data.getIdEquipment());
+        }
+
+        return inspections;
     }
 
+    public List<BreakageData> getBreakages() throws SQLException {
+        breakages.clear();
+        PreparedStatement preparedStatementInner = conn.prepareStatement("SELECT * FROM breakage");
+        ResultSet rs = preparedStatementInner.executeQuery();
+        while (rs.next()) {
+            breakages.add(new BreakageData(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5)));
+        }
 
+        for (BreakageData data: breakages) {
+            System.out.println(data.getDateBreakage() + " " + data.getReason() + " " + data.getFio() + " " +
+                    data.getIdEquipment() + " " + data.getIdArea());
+        }
+
+        return breakages;
+    }
+
+    public void addBreakage(String date, String reason, String fio, int idEquipment, int idArea) throws SQLException {
+        PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO breakage(dateBreakage, reason, FIO, idEquipment, idArea) VALUES (?,?,?,?,?)");
+        preparedStatement.setString(1, date);
+        preparedStatement.setString(2, reason);
+        preparedStatement.setString(3, fio);
+        preparedStatement.setInt(4, idEquipment);
+        preparedStatement.setInt(5, idArea);
+        preparedStatement.executeUpdate();
+    }
 
     public List<ProdAreaData> getAreas() throws SQLException {
         list.clear();
@@ -51,6 +79,29 @@ public class Controller {
         }
 
         return list;
+    }
+
+    public void deleteInspections(String result) throws SQLException {
+        PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM inspection WHERE result = ?");
+        preparedStatement.setString(1, result);
+        preparedStatement.executeUpdate();
+    }
+
+    public void changeInspection(String result, String reason) throws SQLException {
+        PreparedStatement preparedStatement = conn.prepareStatement("UPDATE inspection SET reason = ? WHERE result = ?");
+        preparedStatement.setString(1, reason);
+        preparedStatement.setString(2, result);
+        preparedStatement.executeUpdate();
+    }
+
+    public void addInspection(String date, String result, String reason, int idEmployee, int idEquipment) throws SQLException {
+        PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO inspection(dateInspection, result, reason, idEmployee, idEquipment) VALUES (?,?,?,?,?)");
+        preparedStatement.setString(1, date);
+        preparedStatement.setString(2, result);
+        preparedStatement.setString(3, reason);
+        preparedStatement.setInt(4, idEmployee);
+        preparedStatement.setInt(5, idEquipment);
+        preparedStatement.executeUpdate();
     }
 
     public List<EmployeeData> getEmployees() throws SQLException {
@@ -103,6 +154,57 @@ public class Controller {
         }
 
         return equipmentList;
+    }
+
+    public List<BreakageData> search1 (String date) throws SQLException {
+        search1.clear();
+        PreparedStatement preparedStatementInner = conn.prepareStatement("select breakage.reason, breakage.dateBreakage, e.nameEquipment, e.typeEquipment, pa.nameArea\n" +
+                "from breakage\n" +
+                "inner join equipment e on breakage.idEquipment = e.idEquipment\n" +
+                "inner join production_area pa on breakage.idArea = pa.idArea\n" +
+                "where dateBreakage = ?;");
+        preparedStatementInner.setString(1, date);
+        ResultSet rs = preparedStatementInner.executeQuery();
+        while (rs.next()) {
+            search1.add(new BreakageData(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+        }
+
+        for (BreakageData data: search1) {
+            System.out.println(data.getReason() + " " + data.getDateBreakage() + " " + data.getNameEquipment() + " " +
+                    data.getTypeEquipment() + " " + data.getNameArea());
+        }
+        return search1;
+    }
+
+    public List<InspectionData> search2 (int idEquipment) throws SQLException {
+        search2.clear();
+        PreparedStatement preparedStatementInner = conn.prepareStatement("select inspection.dateInspection, inspection.idEquipment,\n" +
+                "       e.nameEquipment, e.typeEquipment,\n" +
+                "       inspection.result from inspection\n" +
+                "inner join equipment e on inspection.idEquipment = e.idEquipment\n" +
+                "where inspection.idEquipment = ?;");
+        preparedStatementInner.setInt(1, idEquipment);
+        ResultSet rs = preparedStatementInner.executeQuery();
+        while (rs.next()) {
+            search2.add(new InspectionData(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+        }
+
+        return search2;
+    }
+
+    public List<InspectionData> search3 (String dateInspection) throws SQLException {
+        search3.clear();
+        PreparedStatement preparedStatementInner = conn.prepareStatement("select distinct e.FIO, e.position, inspection.dateInspection\n" +
+                "from inspection\n" +
+                "inner join employee e on inspection.idEmployee = e.idemployee\n" +
+                "where dateInspection = ?;");
+        preparedStatementInner.setString(1, dateInspection);
+        ResultSet rs = preparedStatementInner.executeQuery();
+        while (rs.next()) {
+            search3.add(new InspectionData(rs.getString(1), rs.getString(2), rs.getString(3)));
+        }
+
+        return search3;
     }
 
     public void deleteEquipment(int idEquipment) throws SQLException {

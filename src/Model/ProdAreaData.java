@@ -23,15 +23,15 @@ public class ProdAreaData {
 
     //поломка
 
-    public ProdAreaData(String date, String reason, String fio,
-                        String nameArea, int idEquipment, String nameEquipment){
-        this.date = date;
-        this.reason = reason;
-        this.fio = fio;
-        this.nameArea = nameArea;
-        this.idEquipment = idEquipment;
-        this.nameEquipment = nameEquipment;
-    }
+//    public ProdAreaData(String date, String reason, String fio,
+//                        String nameArea, int idEquipment, String nameEquipment){
+//        this.date = date;
+//        this.reason = reason;
+//        this.fio = fio;
+//        this.nameArea = nameArea;
+//        this.idEquipment = idEquipment;
+//        this.nameEquipment = nameEquipment;
+//    }
 
     public void setTypeEquipment(String typeEquipment) {
         this.typeEquipment = typeEquipment;

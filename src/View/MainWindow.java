@@ -22,7 +22,7 @@ public class MainWindow {
 
     public MainWindow() throws SQLException {
         shell.setText("PBZ 2");
-        shell.setSize(950, 200);
+        shell.setSize(1050, 200);
         shell.setBackgroundImage(new Image(display, "img/pic.jpg"));
 
         RowLayout rowLayout = new RowLayout();
@@ -77,6 +77,16 @@ public class MainWindow {
         Button inspection = new Button(shell, SWT.NONE);
         inspection.setBounds(400, 600, 90, 30);
         inspection.setText("Плановый осмотр");
+        inspection.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                try {
+                    InspectionWindow inspectionWindow = new InspectionWindow(display);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 
         Button button2 = new Button(shell, SWT.NONE);
         button2.setBounds(500, 700, 90, 30);
@@ -86,6 +96,20 @@ public class MainWindow {
             public void widgetSelected(SelectionEvent e) {
                 try {
                     BreakageWindow breakageWindow = new BreakageWindow(display);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        Button search = new Button(shell, SWT.NONE);
+        search.setBounds(600, 800, 90, 30);
+        search.setText("Поиски");
+        search.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                try {
+                    SearchWindow searchWindow = new SearchWindow(display);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
