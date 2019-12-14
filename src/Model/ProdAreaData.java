@@ -1,11 +1,11 @@
 package Model;
 
-public class Data {
+public class ProdAreaData {
     private int idArea;
     private String nameArea;
     private int idEquipment;
     private String nameEquipment;
-    private String type;
+    private String typeEquipment;
     private String date;
     private String result;
     private String reason;
@@ -13,19 +13,32 @@ public class Data {
     private String fio;
     private String position;
 
-    public Data (int idArea, String nameArea) {
+
+    //предприятия
+    public ProdAreaData(int idArea, String nameArea, String typeEquipment) {
         this.idArea = idArea;
         this.nameArea = nameArea;
+        this.typeEquipment = typeEquipment;
     }
 
-    public Data(String date, String reason, String fio,
-                String nameArea, int idEquipment, String nameEquipment){
+    //поломка
+
+    public ProdAreaData(String date, String reason, String fio,
+                        String nameArea, int idEquipment, String nameEquipment){
         this.date = date;
         this.reason = reason;
         this.fio = fio;
         this.nameArea = nameArea;
         this.idEquipment = idEquipment;
         this.nameEquipment = nameEquipment;
+    }
+
+    public void setTypeEquipment(String typeEquipment) {
+        this.typeEquipment = typeEquipment;
+    }
+
+    public String getTypeEquipment () {
+        return typeEquipment;
     }
 
     public void setDate() {
@@ -52,7 +65,7 @@ public class Data {
         return fio;
     }
 
-    public void setIdEquipment() {
+    public void setIdEquipment(int idEquipment) {
         this.idEquipment = idEquipment;
     }
 

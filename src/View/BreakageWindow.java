@@ -1,7 +1,7 @@
 package View;
 
 import Controller.Controller;
-import Model.Data;
+import Model.ProdAreaData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class BreakageWindow {
-    private List<Data> areas;
+    private List<ProdAreaData> breakages;
 
     public BreakageWindow(Display display) throws SQLException {
         Controller controller = new Controller();
@@ -38,9 +38,9 @@ public class BreakageWindow {
         table.getColumn(0);
         table.getColumn(1);
 
-        areas = controller.getAreas();
+        breakages = controller.getBreakages();
         table.removeAll();
-        for (Data data: areas) {
+        for (ProdAreaData data: breakages) {
             TableItem tableItem = new TableItem(table, SWT.PUSH);
             tableItem.setText(0, String.valueOf(data.getIdArea()));
             tableItem.setText(1, data.getNameArea());
@@ -59,9 +59,9 @@ public class BreakageWindow {
             public void widgetSelected(SelectionEvent e) {
                 try {
                     controller.deleteArea(Integer.parseInt(text1.getText()));
-                    areas = controller.getAreas();
+                    breakages = controller.getAreas();
                     table.removeAll();
-                    for (Data data: areas) {
+                    for (ProdAreaData data: breakages) {
                         TableItem tableItem = new TableItem(table, SWT.PUSH);
                         tableItem.setText(0, String.valueOf(data.getIdArea()));
                         tableItem.setText(1, data.getNameArea());
@@ -90,10 +90,10 @@ public class BreakageWindow {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 try {
-                    controller.changeArea(Integer.parseInt(text2.getText()), text21.getText());
-                    areas = controller.getAreas();
+                    //controller.changeArea(Integer.parseInt(text2.getText()), text21.getText());
+                    breakages = controller.getAreas();
                     table.removeAll();
-                    for (Data data: areas) {
+                    for (ProdAreaData data: breakages) {
                         TableItem tableItem = new TableItem(table, SWT.PUSH);
                         tableItem.setText(0, String.valueOf(data.getIdArea()));
                         tableItem.setText(1, data.getNameArea());
@@ -122,10 +122,10 @@ public class BreakageWindow {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 try {
-                    controller.addArea(Integer.parseInt(text3.getText()), text31.getText());
-                    areas = controller.getAreas();
+                    //controller.addArea(Integer.parseInt(text3.getText()), text31.getText());
+                    breakages = controller.getAreas();
                     table.removeAll();
-                    for (Data data: areas) {
+                    for (ProdAreaData data: breakages) {
                         TableItem tableItem = new TableItem(table, SWT.PUSH);
                         tableItem.setText(0, String.valueOf(data.getIdArea()));
                         tableItem.setText(1, data.getNameArea());

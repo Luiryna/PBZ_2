@@ -1,7 +1,7 @@
 package View;
 
 import Controller.Controller;
-import Model.ProdAreaData;
+import Model.EquipmentData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -12,14 +12,13 @@ import org.eclipse.swt.widgets.*;
 import java.sql.SQLException;
 import java.util.List;
 
-public class AreasWindow {
+public class EquipmentWindow {
+    private List<EquipmentData> equipment;
 
-    private List<ProdAreaData> areas;
-
-    public AreasWindow(Display display) throws SQLException {
+    public EquipmentWindow(Display display) throws SQLException {
         Controller controller = new Controller();
         Shell shell = new Shell(display, SWT.TITLE | SWT.CLOSE);
-        shell.setText("Участки");
+        shell.setText("Оборудование");
         shell.setSize(600, 600);
         shell.setLayout (new RowLayout());
 
@@ -35,7 +34,7 @@ public class AreasWindow {
         TableColumn tableColumnThird = new TableColumn(table, SWT.NONE);
         tableColumnFirst.setText("ID");
         tableColumnSecond.setText("Название");
-        tableColumnThird.setText("Тип оборудования");
+        tableColumnThird.setText("Тип");
         tableColumnFirst.setWidth(200);
         tableColumnSecond.setWidth(200);
         tableColumnThird.setWidth(200);
@@ -43,12 +42,12 @@ public class AreasWindow {
         table.getColumn(1);
         table.getColumn(2);
 
-        areas = controller.getAreas();
+        equipment = controller.getEquipment();
         table.removeAll();
-        for (ProdAreaData data: areas) {
+        for (EquipmentData data: equipment) {
             TableItem tableItem = new TableItem(table, SWT.PUSH);
-            tableItem.setText(0, String.valueOf(data.getIdArea()));
-            tableItem.setText(1, data.getNameArea());
+            tableItem.setText(0, String.valueOf(data.getIdEquipment()));
+            tableItem.setText(1, data.getNameEquipment());
             tableItem.setText(2, data.getTypeEquipment());
         }
 
@@ -58,19 +57,19 @@ public class AreasWindow {
 
         Text text1 = new Text(group1, SWT.BORDER);
         Button button1 = new Button(group1, SWT.NONE);
-        button1.setText("Удаление");
+        button1.setText("Удалить");
 
         button1.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 try {
-                    controller.deleteArea(Integer.parseInt(text1.getText()));
-                    areas = controller.getAreas();
+                    controller.deleteEquipment(Integer.parseInt(text1.getText()));
+                    equipment = controller.getEquipment();
                     table.removeAll();
-                    for (ProdAreaData data: areas) {
+                    for (EquipmentData data: equipment) {
                         TableItem tableItem = new TableItem(table, SWT.PUSH);
-                        tableItem.setText(0, String.valueOf(data.getIdArea()));
-                        tableItem.setText(1, data.getNameArea());
+                        tableItem.setText(0, String.valueOf(data.getIdEquipment()));
+                        tableItem.setText(1, data.getNameEquipment());
                         tableItem.setText(2, data.getTypeEquipment());
                     }
 
@@ -100,13 +99,13 @@ public class AreasWindow {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 try {
-                    controller.changeArea(Integer.parseInt(text2.getText()), text21.getText(), text22.getText());
-                    areas = controller.getAreas();
+                    controller.changeEquipment(Integer.parseInt(text2.getText()), text21.getText(), text22.getText());
+                    equipment = controller.getEquipment();
                     table.removeAll();
-                    for (ProdAreaData data: areas) {
+                    for (EquipmentData data: equipment) {
                         TableItem tableItem = new TableItem(table, SWT.PUSH);
-                        tableItem.setText(0, String.valueOf(data.getIdArea()));
-                        tableItem.setText(1, data.getNameArea());
+                        tableItem.setText(0, String.valueOf(data.getIdEquipment()));
+                        tableItem.setText(1, data.getNameEquipment());
                         tableItem.setText(2, data.getTypeEquipment());
                     }
 
@@ -130,19 +129,19 @@ public class AreasWindow {
         label32.setText("Введи тип оборудования");
         Text text32 = new Text(group3, SWT.BORDER);
         Button button3 = new Button(group3, SWT.NONE);
-        button3.setText("Добавить подразделение");
+        button3.setText("Добавить оборудование");
 
         button3.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 try {
-                    controller.addArea(Integer.parseInt(text3.getText()), text31.getText(), text32.getText());
-                    areas = controller.getAreas();
+                    controller.addEquipment(Integer.parseInt(text3.getText()), text31.getText(), text32.getText());
+                    equipment = controller.getEquipment();
                     table.removeAll();
-                    for (ProdAreaData data: areas) {
+                    for (EquipmentData data: equipment) {
                         TableItem tableItem = new TableItem(table, SWT.PUSH);
-                        tableItem.setText(0, String.valueOf(data.getIdArea()));
-                        tableItem.setText(1, data.getNameArea());
+                        tableItem.setText(0, String.valueOf(data.getIdEquipment()));
+                        tableItem.setText(1, data.getNameEquipment());
                         tableItem.setText(2, data.getTypeEquipment());
                     }
 
@@ -154,13 +153,4 @@ public class AreasWindow {
 
         shell.open();
     }
-
-    private void createColumn(Table table, String text, int width){
-        TableColumn fioColumn = new TableColumn(table, SWT.CENTER);
-        fioColumn.setText(text);
-        fioColumn.setResizable(true);
-        fioColumn.setWidth(width);
-    }
-
-
 }
